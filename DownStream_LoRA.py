@@ -26,10 +26,10 @@ tokenizer = PolymerSmilesTokenizer.from_pretrained("roberta-base", max_len=finet
 # LoRA setup
 if finetune_config['lora_flag']:
     lora_config = LoraConfig(
-        r=8,
-        lora_alpha=32,
+        r=64,
+        lora_alpha=16,
         target_modules=["query", "value"],
-        lora_dropout=0.1,
+        lora_dropout=0.05,
         bias="none",
         task_type="SEQ_CLS"
     )
