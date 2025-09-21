@@ -25,14 +25,15 @@ tokenizer = PolymerSmilesTokenizer.from_pretrained("roberta-base", max_len=finet
 
 # LoRA setup
 if finetune_config['lora_flag']:
-    lora_config = LoraConfig(
-        r=64,
-        lora_alpha=16,
-        target_modules=["query", "value"],
-        lora_dropout=0.05,
-        bias="none",
-        task_type="SEQ_CLS"
-    )
+    lora_config = LoraConfig(**finetune_config['lora_args'])
+    # lora_config = LoraConfig(
+    #     r=finetune_config['r'],
+    #     lora_alpha=finetune_config['lora_alpha'],
+    #     target_modules=finetune_config['target_modules'],
+    #     lora_dropout=finetune_config['lora_dropout'],
+    #     bias=finetune_config['bias'],
+    #     task_type=finetune_config['task_type']
+    # )
     model = get_peft_model(model, lora_config)
 
 model.to(device)
@@ -47,19 +48,21 @@ val_data = pd.read_csv(finetune_config['test_file'])
 val_dataset = Downstream_Dataset(val_data, tokenizer, finetune_config['blocksize'])
 
 # TrainingArguments
-training_args = TrainingArguments(
-    output_dir=finetune_config['save_path'],
-    num_train_epochs=finetune_config['num_epochs'],
-    per_device_train_batch_size=finetune_config['batch_size'],
-    eval_strategy="epoch",
-    save_strategy="epoch",
-    save_total_limit=2,
-    load_best_model_at_end=True,
-    metric_for_best_model="eval_loss",
-    logging_steps=50,
-    logging_dir=finetune_config['log_path'],
-    fp16=True
-)
+
+training_args = TrainingArguments(**finetune_config['training_args'])
+# training_args = TrainingArguments(
+#     output_dir=finetune_config['save_path'],
+#     num_train_epochs=finetune_config['num_epochs'],
+#     per_device_train_batch_size=finetune_config['batch_size'],
+#     eval_strategy=finetune_config['eval_strategy'],
+#     save_strategy=finetune_config['save_strategy'],
+#     save_total_limit=finetune_config['save_total_limit'],
+#     load_best_model_at_end=finetune_config['load_best_model_at_end'],
+#     metric_for_best_model=finetune_config['metric_for_best_model'],
+#     logging_steps=finetune_config['logging_steps'],
+#     logging_dir=finetune_config['log_path'],
+#     fp16=finetune_config['fp16'],
+# )
 
 # EarlyStoppingCallback
 early_stopping = EarlyStoppingCallback(
