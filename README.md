@@ -2,7 +2,7 @@
 
 Fine-tuning of TransPolymer for prediction of polymer properties from SMILES data. 
 
-This repository contains files that allow for LoRA fine tuning of TransPolymer for the prediction of five polymer properties: 
+This repository contains files that allow for LoRA fine-tuning of TransPolymer for the prediction of five polymer properties: 
 
 1. Glass Transition Temperature (Tg)
 2. Crystallization Temperature (Tc)
@@ -18,7 +18,7 @@ The LoRA fine-tuning framework presented here was created for the NeurIPS - Open
 
 - Fine-tunes the [TransPolymer](https://github.com/ChangwenXu98/TransPolymer.git) model for property prediction using SMILES data.
 - Jupyter Notebook and Python-based workflow.
-- Includes basic visualization tools to assess Pearson corrlation and loss for adjustment of LoRA parameters for training. 
+- Includes basic visualization tools to assess Pearson correlation and loss for adjustment of LoRA training parameters. 
 
 ---
 
@@ -52,52 +52,42 @@ pip install torch rdkit pandas ...
 
 ---
 
-## Usage
+## Dataset
 
-1. Launch Jupyter Notebook:
-    ```bash
-    jupyter notebook
-    ```
-2. Open and run the provided notebooks in sequence.
-3. To fine-tune on your own data, update the appropriate data paths and parameters in the notebook or scripts.
+The primary and supplementary training data was provided by the Kaggle competition organizers (https://www.kaggle.com/competitions/neurips-open-polymer-prediction-2025/data), and is provided here in the data/neurips-open-polymer-prediction-2025 folder. It was augmented with rdkit using the data_prep.py script provided in the repository and broken into to 5 sets of train and test data for each target property (Tg, Tc, Rg, density, FFV) with a 0.9/0.1 training/test split. These datasets for downstream LoRA fine-tuning are provided in the data/ folder. 
 
-**Example notebook:**  
-`notebooks/finetune_transpolymer.ipynb`
+For Tg, optimal results were obtained by normalizing both the train and test sets by the largest value across both sets (see normalizer.py). There are also other train and test sets for Tg that were adjusted with z-normalizaiton (see znormalizer.py). Both normalized and z-normalized Tg data are available in the data/ folder. 
 
----
+The general format of the training and test data sets used for downstream LoRA fine-tuning is as follows:
 
-## Project Structure
-
-```plaintext
-polymers_ftw/
-├── data/                 # Datasets and data preprocessing scripts
-├── notebooks/            # Jupyter Notebooks for experiments and analysis
-├── src/                  # Core Python modules
-├── results/              # Results, metrics, and figures
-├── requirements.txt      # List of required Python packages
-└── README.md             # Project documentation
-```
-
----
-
-## Data
-
-- Input data: SMILES strings and associated target properties.
-- Place your data in the `data/` directory.
-- Data format example (CSV):
-    | SMILES        | property1 | property2 |
-    |---------------|-----------|-----------|
-    | CC(=O)OC1=CC=... | 0.123     | 5.67      |
-
-- (Optional) Preprocessing scripts and instructions.
+    |  SMILES       | property |
+    |---------------|----------|
+    | CC(=O)OC1=CC=... | 0.123 |
 
 ---
 
 ## Training and Evaluation
 
-- Instructions for running training and evaluation scripts or notebooks.
-- Configurable hyperparameters: learning rate, batch size, epochs, etc.
-- Example command or notebook cell to start training.
+### Fine-tuning
+
+1. Edit the training parameters in the config_finetune.yaml file
+2. Run the following command:
+```bash
+python DownStream_LoRA.py
+```
+Note that the default loss function for downstream training is MSE.
+
+### Inference
+
+Inference can be performed with either the included notebook, inference.ipynb.
+
+### Model Checkpoints
+
+The pre-trained TransPolymer model checkpoint is included in ckpt/pretrain.pt. The LoRA fine-tuned model checkpoints are included in ckpt/neurips.pt
+
+### Data Visualization
+
+The provided correlation.ipynb notebook allows for visualization of Pearson correlation between actual test and predicted properties. The loss_plot.ipynb notebook allows for plotting training and test loss. 
 
 ---
 
@@ -112,26 +102,47 @@ polymers_ftw/
 ## Contributing
 
 Contributions are welcome!  
-Please open an issue or submit a pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) (if available) for more details.
+Please open an issue or submit a pull request.
 
 ---
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).  
-(Or update with your preferred license.)
 
 ---
 
 ## Acknowledgements
 
-- Based on [TransPolymer](https://github.com/fvillafu125/TransPolymer)
-- List any collaborators, datasets, or libraries used.
-- Funding sources (if any).
+- Based on [TransPolymer](https://github.com/ChangwenXu98/TransPolymer.git)
+```
+@article{xu2023transpolymer,
+  title={TransPolymer: a Transformer-based language model for polymer property predictions},
+  author={Xu, Changwen and Wang, Yuyang and Barati Farimani, Amir},
+  journal={npj Computational Materials},
+  volume={9},
+  number={1},
+  pages={64},
+  year={2023},
+  publisher={Nature Publishing Group UK London}
+}
+```
+- Fine-tuning performed using Low Rank Adaptation (LoRA)
+```
+@misc{hu2021loralowrankadaptationlarge,
+      title={LoRA: Low-Rank Adaptation of Large Language Models}, 
+      author={Edward J. Hu and Yelong Shen and Phillip Wallis and Zeyuan Allen-Zhu and Yuanzhi Li and Shean Wang and Lu Wang and Weizhu Chen},
+      year={2021},
+      eprint={2106.09685},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2106.09685}, 
+}
+```
 
 ---
 
 ## Contact
 
 For questions, suggestions, or collaborations, please contact:  
-[Your Name] ([your.email@domain.com](mailto:your.email@domain.com))
+[Fernando Villafuerte] ([fjoaquin.villafuerte@gmail.com](mailto:fjoaquin.villafuerte@gmail.com))
