@@ -1,32 +1,44 @@
-CV_flag: False                                      # whether to use cross-validation
-add_vocab_flag: False                               # whether to add supplementary vocab
-LLRD_flag: False                                    # whether to use layer-wise lr decay
-aug_flag: False                                     # whether to apply data augmentation
-aug_special_flag: False                            # whether to augment copolymer SMILES
-model_indicator: 'pretrain'                        # whether to use pretrained model
-aug_indicator:                                     # number of augmentation per SMILES. If no limitation, assign the indicator with None (leave it blank).
-lora_flag: True                                    # whether to use LoRA
+# Necessary paths, libraries, and flags for fine-tuning with LoRA
 
-vocab_sup_file: 'data/vocab/vocab_sup_PE_I.csv'     # supplementary vocab file path
-train_file: 'data/neurips_augmented_train_Tc.csv'      # train file path
-test_file: 'data/neurips_augmented_test_Tc.csv'        # test file path if cross-validation is not used
+lora_flag: True                                  # whether to use LoRA
+train_file: 'data/neurips_augmented_train_Tg_norm.csv'      # train file path
+test_file: 'data/neurips_augmented_test_Tg_norm.csv'        # test file path if cross-validation is not used
 model_path: 'ckpt/pretrain.pt'                      # pretrain model path
-save_path: 'ckpt/neurips.pt/Tc'                     # checkpoint path
+save_path: 'ckpt/neurips.pt/Tg'                     # checkpoint path
 # best_model_path: f"{save_path}/Rg1"          # best model save path
-log_path: 'ckpt/neurips.pt/logs'                   # log path 
-
-k: 2                                                # k-fold cross-validation
+log_path: 'ckpt/neurips.pt/logs'                    # log path 
 blocksize: 411                                      # max length of sequences after tokenization
-batch_size: 4                                      # batch size
-num_epochs: 10                                      # total number of epochs
-warmup_ratio: 0.05                                  # warmup ratio
-drop_rate: 0.1                                      # dropout
-lr_rate: 0.00005                                    # initial lr for LLRD and pretrained model lr otherwise
-lr_rate_reg: 0.0001                                 # regressor lr if LLRD is not used
-weight_decay: 0.01
-hidden_dropout_prob: 0.1                            # hidden layer dropout
-attention_probs_dropout_prob: 0.1                   # attention dropout
-tolerance: 2                                        # tolerance of no improvement in performance before early stop
-num_workers: 0                                      # number of workers when loading data
+
+# LoRA parameters
+
+lora_args:
+  r: 8                                              # rank
+  lora_alpha: 32                                     # LoRA alpha
+  lora_dropout: 0.1                                  # LoRA dropout
+  target_modules: ["query", "value"]                  # target modules to apply LoRA
+  bias: "none"                                       # bias type
+  task_type: "SEQ_CLS"                               # task type
+
+# Training parameters
+
+training_args:                                    # training arguments for HuggingFace Trainer
+  output_dir: 'ckpt/neurips.pt/Tg'                   # output directory
+  num_train_epochs: 10                               # number of training epochs
+  per_device_train_batch_size: 4                     # batch size per device during training
+  eval_strategy: 'epoch'                             # evaluation strategy
+  save_strategy: 'epoch'                             # save strategy
+  save_total_limit: 2                                # maximum number of checkpoints to save
+  load_best_model_at_end: True                       # whether to load the best model at the end of training
+  metric_for_best_model: 'eval_loss'                # metric for best model
+  logging_steps: 50                                  # logging steps
+  logging_dir: 'ckpt/neurips.pt/logs'               # logging directory
+  fp16: True                                        # whether to use fp16
+
+# Callback parameters                            
+
+tolerance: 2                          # arguments for callbacks
+                       
+
+
 
 

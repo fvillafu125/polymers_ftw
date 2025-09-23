@@ -1,10 +1,10 @@
 # Necessary paths, libraries, and flags for fine-tuning with LoRA
 
 lora_flag: True                                  # whether to use LoRA
-train_file: 'data/neurips_augmented_train_Tc.csv'      # train file path
-test_file: 'data/neurips_augmented_test_Tc.csv'        # test file path if cross-validation is not used
+train_file: 'data/neurips_augmented_train_Tg_norm.csv'      # train file path
+test_file: 'data/neurips_augmented_test_Tg_norm.csv'        # test file path if cross-validation is not used
 model_path: 'ckpt/pretrain.pt'                      # pretrain model path
-save_path: 'ckpt/neurips.pt/Tc'                     # checkpoint path
+save_path: 'ckpt/neurips.pt/Tg'                     # checkpoint path
 # best_model_path: f"{save_path}/Rg1"          # best model save path
 log_path: 'ckpt/neurips.pt/logs'                    # log path 
 blocksize: 411                                      # max length of sequences after tokenization
@@ -12,9 +12,9 @@ blocksize: 411                                      # max length of sequences af
 # LoRA parameters
 
 lora_args:
-  r: 64                                              # rank
-  lora_alpha: 16                                     # LoRA alpha
-  lora_dropout: 0.05                                  # LoRA dropout
+  r: 8                                              # rank
+  lora_alpha: 32                                     # LoRA alpha
+  lora_dropout: 0.1                                  # LoRA dropout
   target_modules: ["query", "value"]                  # target modules to apply LoRA
   bias: "none"                                       # bias type
   task_type: "SEQ_CLS"                               # task type
@@ -22,11 +22,11 @@ lora_args:
 # Training parameters
 
 training_args:                                    # training arguments for HuggingFace Trainer
-  output_dir: 'ckpt/neurips.pt/Tc'                   # output directory
+  output_dir: 'ckpt/neurips.pt/Tg'                   # output directory
   num_train_epochs: 10                               # number of training epochs
   per_device_train_batch_size: 4                     # batch size per device during training
-  eval_strategy: 'steps'                             # evaluation strategy
-  save_strategy: 'steps'                             # save strategy
+  eval_strategy: 'epoch'                             # evaluation strategy
+  save_strategy: 'epoch'                             # save strategy
   save_total_limit: 2                                # maximum number of checkpoints to save
   load_best_model_at_end: True                       # whether to load the best model at the end of training
   metric_for_best_model: 'eval_loss'                # metric for best model
