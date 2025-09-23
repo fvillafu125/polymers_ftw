@@ -11,6 +11,7 @@ This repository contains files that allow for LoRA fine tuning of TransPolymer f
 5. Free Fractional Volume (FFV)
 
 The LoRA fine-tuning framework presented here was created for the NeurIPS - Open Polymer Prediction 2025 competition hosted by Notre Dame University on Kaggle (https://www.kaggle.com/competitions/neurips-open-polymer-prediction-2025/overview), where it won a silver medal. 
+
 ---
 
 ## Features
