@@ -26,11 +26,11 @@ The LoRA fine-tuning framework presented here was created for the NeurIPS - Open
 
 ### Prerequisites
 
-- See the requirements.txt file
+See the requirements.txt file.
 
 ### Setup
 
-Create a python environment
+Create a python environment:
 ```bash
 python -m venv your_environment_name
 ```
@@ -54,7 +54,7 @@ pip install torch rdkit pandas ...
 
 ## Dataset
 
-The primary and supplementary training data was provided by the Kaggle competition organizers (https://www.kaggle.com/competitions/neurips-open-polymer-prediction-2025/data), and is provided here in the data/neurips-open-polymer-prediction-2025 folder. It was augmented with rdkit using the data_prep.py script provided in the repository and broken into to 5 sets of train and test data for each target property (Tg, Tc, Rg, density, FFV) with a 0.9/0.1 training/test split. These datasets for downstream LoRA fine-tuning are provided in the data/ folder. 
+The primary and supplementary training data was provided by the Kaggle competition organizers (https://www.kaggle.com/competitions/neurips-open-polymer-prediction-2025/data), and is included here in the data/neurips-open-polymer-prediction-2025 folder. It was augmented with rdkit using the data_prep.py script provided in the repository and broken into to 5 sets of train and test data for each target property (Tg, Tc, Rg, density, FFV) with a 0.9/0.1 training/test split. These datasets for downstream LoRA fine-tuning are provided in the data/ folder. 
 
 For Tg, optimal results were obtained by normalizing both the train and test sets by the largest value across both sets (see normalizer.py). There are also other train and test sets for Tg that were adjusted with z-normalizaiton (see znormalizer.py). Both normalized and z-normalized Tg data are available in the data/ folder. 
 
@@ -70,7 +70,7 @@ The general format of the training and test data sets used for downstream LoRA f
 
 ### Fine-tuning
 
-1. Edit the training parameters in the config_finetune.yaml file
+1. Edit the training parameters in the config_finetune.yaml file.
 2. Run the following command:
 ```bash
 python DownStream_LoRA.py
@@ -83,7 +83,7 @@ Inference can be performed with either the included notebook, inference.ipynb.
 
 ### Model Checkpoints
 
-The pre-trained TransPolymer model checkpoint is included in ckpt/pretrain.pt. The LoRA fine-tuned model checkpoints are included in ckpt/neurips.pt
+The pre-trained TransPolymer model checkpoint is included in ckpt/pretrain.pt. The LoRA fine-tuned model checkpoints are included in ckpt/neurips.pt.
 
 ### Data Visualization
 
@@ -106,7 +106,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgements
 
-- Based on [TransPolymer](https://github.com/ChangwenXu98/TransPolymer.git)
+- LoRA fine-tuning performed on pretrained model from [TransPolymer](https://github.com/ChangwenXu98/TransPolymer.git):
 ```
 @article{xu2023transpolymer,
   title={TransPolymer: a Transformer-based language model for polymer property predictions},
@@ -119,7 +119,7 @@ This project is licensed under the [MIT License](LICENSE).
   publisher={Nature Publishing Group UK London}
 }
 ```
-- Fine-tuning performed using Low Rank Adaptation (LoRA)
+Fine-tuning performed using Low Rank Adaptation (LoRA):
 ```
 @misc{hu2021loralowrankadaptationlarge,
       title={LoRA: Low-Rank Adaptation of Large Language Models}, 
