@@ -91,14 +91,6 @@ The provided correlation.ipynb notebook allows for visualization of Pearson corr
 
 ---
 
-## Results
-
-- Summarize key results (tables, metrics, example plots).
-- (Optional) Add images or figures to illustrate performance.
-- (Optional) Link to pre-trained models or supplementary materials.
-
----
-
 ## Contributing
 
 Contributions are welcome!  
